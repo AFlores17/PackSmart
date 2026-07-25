@@ -1,0 +1,82 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+
+  <title>PackSmart</title>
+
+  <link rel="stylesheet" href="style.css" />
+</head>
+<body>
+  <main class="app-container">
+
+    <header>
+      <h1>PackSmart</h1>
+      <p>Backpack Information Screen</p>
+    </header>
+
+    <section class="card">
+      <h2>Backpack Information</h2>
+
+      <p class="helper-text">
+        Select a backpack from the starter list or manually enter your own backpack information.
+      </p>
+
+      <form id="backpackForm">
+
+        <label for="backpackSelect">Choose from Starter Backpack List</label>
+        <select id="backpackSelect">
+          <option value="">-- Select a backpack or enter your own --</option>
+          <option value="custom">Add Custom Backpack</option>
+        </select>
+
+        <label for="brand">Backpack Brand</label>
+        <input
+          type="text"
+          id="brand"
+          placeholder="Example: Osprey"
+          required
+        />
+
+        <label for="model">Backpack Model</label>
+        <input
+          type="text"
+          id="model"
+          placeholder="Example: Atmos AG 65"
+          required
+        />
+
+        <label for="capacity">Capacity in Liters</label>
+        <input
+          type="number"
+          id="capacity"
+          placeholder="Example: 65"
+          required
+        />
+
+        <label for="weightLimit">Weight Limit in Pounds</label>
+        <input
+          type="number"
+          id="weightLimit"
+          placeholder="Example: 55"
+          required
+        />
+
+        <button type="submit">Save Backpack Info</button>
+      </form>
+    </section>
+
+    <section class="card output-card">
+      <h2>Saved Backpack Information</h2>
+
+      <div id="output">
+        <p>No backpack information saved yet.</p>
+      </div>
+    </section>
+
+  </main>
+
+  <script src="script.js"></script>
+</body>
+</html>

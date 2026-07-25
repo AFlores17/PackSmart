@@ -1,0 +1,31 @@
+id,brand,model,category,capacity_liters,capacity_display,load_min_lbs,load_max_lbs,pack_weight_lbs,height_in,width_in,depth_in
+BP001,REI Co-op,Flash 22 Pack,Day Pack,22,22 L,,,,,,
+BP002,REI Co-op,Trail 25 Pack,Day Pack,25,25 L,,,1.81,,,
+BP003,Osprey,Daylite Plus,Day Pack,20,20 L,,,1.29,18.9,11.02,9.45
+BP004,Osprey,Talon 22,Day Pack,22,22 L,10,30,2.38,22,11.4,11.4
+BP005,Gregory,Zulu 30,Day Pack,30,30 L,,40,,22.5,12.75,11
+BP006,Deuter,Speed Lite Pro 25,Day Pack,25,25 L,,,1.5,,,
+BP007,CamelBak,Rim Runner X22,Hydration Day Pack,22,22 L,,,,,,
+BP008,Patagonia,Terravia Pack 22L,Day Pack,22,22 L,,,1,19.75,11,6.5
+BP009,Mystery Ranch,Coulee 30,Day Pack,30,30 L,,28,2.7,,,
+BP010,Black Diamond,Pursuit 30,Day Pack,30,30 L,,,1.75,,,
+BP011,Osprey,Stratos 36,Long Day / Overnight Pack,36,36 L,10,30,3,27.6,13.4,11
+BP012,Deuter,Futura 32,Long Day / Overnight Pack,32,32 L,,,,,,
+BP013,Gregory,Jade 38,Long Day / Overnight Pack,38,38 L,,39.7,,25.2,12.6,11
+BP014,REI Co-op,Flash 55,Weekend Backpacking Pack,55,55 L,,30,2.8,30,14,12
+BP015,Osprey,Exos 58,Weekend Backpacking Pack,58,58 L,30,35,2.81,30,15,13
+BP016,Osprey,Eja 58,Weekend Backpacking Pack,58,58 L,30,35,,,,
+BP017,Gregory,Paragon 58,Weekend Backpacking Pack,58,58 L,,50,3.58,31.1,14.6,10.2
+BP018,Gregory,Maven 55,Weekend Backpacking Pack,55,55 L,,50,,26.8,14.6,10.2
+BP019,Deuter,Aircontact Core 65+10,Large Backpacking Pack,75,65 + 10 L,33.1,44.1,,33.1,12.6,11
+BP020,Kelty,Coyote 65,Large Backpacking Pack,65,65 L,,,4.63,30,18,12
+BP021,Sierra Designs,Flex Trail 40-60L,Adjustable Backpacking Pack,60,40-60 L,,,2.75,,,
+BP022,Hyperlite Mountain Gear,Southwest 55,Ultralight Backpacking Pack,55,55 L,,40,1.93,,,
+BP023,Granite Gear,Crown3 60,Ultralight Backpacking Pack,60,60 L,25,43,2.48,,,
+BP024,Osprey,Atmos AG 65,Large Backpacking Pack,65,65 L,30,40,4.61,34.65,15.35,14.17
+BP025,Osprey,Aura AG 65,Large Backpacking Pack,65,65 L,30,40,4.6,32.28,15.35,14.17
+BP026,Osprey,Aether Plus 70,Large Backpacking Pack,70,70 L,30,60,,31.1,14.96,14.17
+BP027,Osprey,Ariel Plus 70,Large Backpacking Pack,70,70 L,30,60,,31.5,14.96,13.39
+BP028,Gregory,Baltoro 65,Large Backpacking Pack,65,65 L,,50,,,,
+BP029,Gregory,Deva 60,Large Backpacking Pack,60,60 L,,50,4,28.7,13.4,13
+BP030,Fjallraven,Kajka 65,Large Trekking Pack,65,65 L,,,6.92,,,
