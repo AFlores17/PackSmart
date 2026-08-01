@@ -13,7 +13,7 @@
 
     <header>
       <h1>PackSmart</h1>
-      <p>Backpack Information Screen</p>
+      <p>Plan Your Gear with Confidence</p>
     </header>
 
     <section class="card">
@@ -73,6 +73,115 @@
       <div id="output">
         <p>No backpack information saved yet.</p>
       </div>
+    </section>
+
+    <section class="card">
+      <h2>Trip Details</h2>
+      <p class="section-note">Enter basic trip information for the packing list.</p>
+
+      <form id="tripForm">
+        <label for="tripName">Trip Name</label>
+        <input
+          type="text"
+          id="tripName"
+          placeholder="Example: Lake Easton Camping Trip"
+          required
+        />
+
+        <label for="tripLocation">Trip Location</label>
+        <input
+          type="text"
+          id="tripLocation"
+          placeholder="Example: Lake Easton State Park"
+          required
+        />
+
+        <label for="tripDays">Number of Days</label>
+        <input
+          type="number"
+          id="tripDays"
+          min="1"
+          placeholder="Example: 2"
+          required
+        />
+
+        <label for="tripWeather">Expected Weather</label>
+        <select id="tripWeather" required>
+          <option value="">-- Select weather --</option>
+          <option value="Warm">Warm</option>
+          <option value="Cold">Cold</option>
+          <option value="Rainy">Rainy</option>
+          <option value="Mixed">Mixed</option>
+        </select>
+
+        <label for="tripDifficulty">Trip Difficulty</label>
+        <select id="tripDifficulty" required>
+          <option value="">-- Select difficulty --</option>
+          <option value="Easy">Easy</option>
+          <option value="Moderate">Moderate</option>
+          <option value="Hard">Hard</option>
+        </select>
+
+        <button type="submit">Save Trip Details</button>
+      </form>
+
+      <div id="tripOutput" class="output-box"></div>
+    </section>
+
+    <section class="card">
+      <h2>Packing List</h2>
+      <p class="section-note">Select items for the trip and enter item weights to track backpack load.</p>
+
+      <div class="packing-grid">
+        <div class="packing-category">
+          <h3>Shelter</h3>
+          <label><input type="checkbox" class="pack-item" data-weight="4"> Tent - 4 lbs</label>
+          <label><input type="checkbox" class="pack-item" data-weight="1.5"> Sleeping Pad - 1.5 lbs</label>
+          <label><input type="checkbox" class="pack-item" data-weight="3"> Sleeping Bag - 3 lbs</label>
+        </div>
+
+        <div class="packing-category">
+          <h3>Clothing</h3>
+          <label><input type="checkbox" class="pack-item" data-weight="1"> Jacket - 1 lb</label>
+          <label><input type="checkbox" class="pack-item" data-weight="0.5"> Extra Socks - 0.5 lbs</label>
+          <label><input type="checkbox" class="pack-item" data-weight="1"> Extra Shirt - 1 lb</label>
+        </div>
+
+        <div class="packing-category">
+          <h3>Food and Water</h3>
+          <label><input type="checkbox" class="pack-item" data-weight="2"> Food - 2 lbs</label>
+          <label><input type="checkbox" class="pack-item" data-weight="2"> Water Bottle - 2 lbs</label>
+          <label><input type="checkbox" class="pack-item" data-weight="1"> Cooking Kit - 1 lb</label>
+        </div>
+
+        <div class="packing-category">
+          <h3>Safety</h3>
+          <label><input type="checkbox" class="pack-item" data-weight="0.5"> First Aid Kit - 0.5 lbs</label>
+          <label><input type="checkbox" class="pack-item" data-weight="0.3"> Flashlight - 0.3 lbs</label>
+          <label><input type="checkbox" class="pack-item" data-weight="0.2"> Map / Compass - 0.2 lbs</label>
+        </div>
+      </div>
+
+      <div class="custom-item-box">
+        <h3>Add Custom Item</h3>
+
+        <label for="customItemName">Item Name</label>
+        <input type="text" id="customItemName" placeholder="Example: Camera" />
+
+        <label for="customItemWeight">Item Weight in lbs</label>
+        <input type="number" id="customItemWeight" min="0" step="0.1" placeholder="Example: 1.2" />
+
+        <button type="button" id="addCustomItem">Add Item</button>
+      </div>
+
+      <div id="customItemsList"></div>
+
+      <div class="weight-summary">
+        <h3>Total Pack Weight: <span id="totalWeight">0</span> lbs</h3>
+        <button type="button" id="saveFullTrip">Save Full Trip</button>
+      </div>
+
+      <div id="savedTripsOutput" class="output-box"></div>
     </section>
 
   </main>
