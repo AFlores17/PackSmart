@@ -8,13 +8,21 @@ PackSmart is a camping and hiking backpack-planning web app that helps beginners
 - Starter backpack CSV list
 - Dropdown selection for backpack models
 - Saved backpack information display
+- Trip details form
+- Basic packing list screen
+- Item categories for shelter, clothing, food and water, and safety
+- Custom packing item entry
+- Total pack weight tracker
+- Saved trip information using local storage
+- Save up to 15 trips locally
 - Outdoors-inspired hunter green design
 
 ## Planned Features
 
-- Trip details screen
-- Packing list screen
-- Item categories
-- Weight tracking
-- Trip history
-- Save up to 15 trips locally
+- Improve the trip history display
+- Add more packing categories
+- Add better item recommendations based on trip details
+- Improve weight tracking with backpack weight limits
+- Add edit or delete options for saved trips
+- Improve mobile layout
+- Continue testing local storage
