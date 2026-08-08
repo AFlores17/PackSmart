@@ -3,52 +3,67 @@ document.addEventListener("DOMContentLoaded", function () {
   const output = document.getElementById("output");
   const backpackSelect = document.getElementById("backpackSelect");
 
-  let backpackDatabase = [];
+  const tripForm = document.getElementById("tripForm");
+  const tripOutput = document.getElementById("tripOutput");
+  const totalWeightDisplay = document.getElementById("totalWeight");
+  const backpackLimitDisplay = document.getElementById("backpackLimitDisplay");
+  const remainingWeightDisplay = document.getElementById("remainingWeight");
+  const weightStatus = document.getElementById("weightStatus");
+  const categoryWeightOutput = document.getElementById("categoryWeightOutput");
+  const addCustomItemButton = document.getElementById("addCustomItem");
+  const customItemsList = document.getElementById("customItemsList");
+  const saveFullTripButton = document.getElementById("saveFullTrip");
+  const savedTripsOutput = document.getElementById("savedTripsOutput");
+  const clearSavedTripsButton = document.getElementById("clearSavedTrips");
 
-  // CSV file location
-  const csvFilePaths = ["data/backpacks.csv"];
+  let backpackDatabase = [];
+  let currentTrip = {};
+  let currentBackpack = getSavedBackpack();
+
+  const csvFilePath = "data/backpacks.csv";
 
   loadBackpackDatabase();
   loadSavedBackpack();
+  loadSavedTripDetails();
+  setupPackingItemListeners();
+  displaySavedTrips();
+  updateTotalWeight();
 
-  // Load backpack data from the CSV file
   async function loadBackpackDatabase() {
-    for (const filePath of csvFilePaths) {
-      try {
-        const response = await fetch(filePath);
+    try {
+      const response = await fetch(csvFilePath);
 
-        if (!response.ok) {
-          continue;
-        }
-
-        const csvText = await response.text();
-        backpackDatabase = parseCSV(csvText);
-        populateBackpackDropdown(backpackDatabase);
-
-        console.log("Loaded backpack database from: " + filePath);
-        return;
-      } catch (error) {
-        console.log("Could not load backpack CSV.");
+      if (!response.ok) {
+        throw new Error("CSV file not found");
       }
-    }
 
-    backpackSelect.innerHTML = `
-      <option value="">CSV not loaded. Enter backpack manually.</option>
-      <option value="custom">Add Custom Backpack</option>
-    `;
+      const csvText = await response.text();
+      backpackDatabase = parseCSV(csvText);
+      populateBackpackDropdown(backpackDatabase);
+    } catch (error) {
+      backpackSelect.innerHTML = `
+        <option value="">CSV not loaded. Enter backpack manually.</option>
+        <option value="custom">Add Custom Backpack</option>
+      `;
+    }
   }
 
-  // Load saved backpack information
-  function loadSavedBackpack() {
+  function getSavedBackpack() {
     const savedBackpack = localStorage.getItem("packsmartBackpack");
 
     if (savedBackpack) {
-      const backpack = JSON.parse(savedBackpack);
-      displayBackpack(backpack);
+      return JSON.parse(savedBackpack);
+    }
+
+    return {};
+  }
+
+  function loadSavedBackpack() {
+    if (currentBackpack.brand) {
+      displayBackpack(currentBackpack);
     }
   }
 
-  // CSV parser
   function parseCSV(csvText) {
     const rows = [];
     let currentRow = [];
@@ -97,7 +112,6 @@ document.addEventListener("DOMContentLoaded", function () {
     });
   }
 
-  // Add backpack options to dropdown
   function populateBackpackDropdown(backpacks) {
     backpackSelect.innerHTML = `
       <option value="">-- Select a backpack or enter your own --</option>
@@ -106,7 +120,6 @@ document.addEventListener("DOMContentLoaded", function () {
 
     backpacks.forEach(function (backpack, index) {
       const option = document.createElement("option");
-
       option.value = index;
       option.textContent =
         backpack.brand +
@@ -120,7 +133,6 @@ document.addEventListener("DOMContentLoaded", function () {
     });
   }
 
-  // Fill the form when a backpack is selected
   backpackSelect.addEventListener("change", function () {
     const selectedValue = backpackSelect.value;
 
@@ -153,7 +165,6 @@ document.addEventListener("DOMContentLoaded", function () {
     `;
   });
 
-  // Save backpack information
   backpackForm.addEventListener("submit", function (event) {
     event.preventDefault();
 
@@ -171,22 +182,22 @@ document.addEventListener("DOMContentLoaded", function () {
       return;
     }
 
-    const backpack = {
+    currentBackpack = {
       brand: brand,
       model: model,
       capacity: capacity,
       weightLimit: weightLimit
     };
 
-    localStorage.setItem("packsmartBackpack", JSON.stringify(backpack));
+    localStorage.setItem("packsmartBackpack", JSON.stringify(currentBackpack));
 
-    displayBackpack(backpack);
+    displayBackpack(currentBackpack);
+    updateTotalWeight();
 
     backpackForm.reset();
     backpackSelect.value = "";
   });
 
-  // Display saved backpack information
   function displayBackpack(backpack) {
     output.innerHTML = `
       <div class="saved-item">
@@ -203,7 +214,6 @@ document.addEventListener("DOMContentLoaded", function () {
     `;
   }
 
-  // Clear backpack form
   function clearBackpackForm() {
     document.getElementById("brand").value = "";
     document.getElementById("model").value = "";
@@ -211,25 +221,6 @@ document.addEventListener("DOMContentLoaded", function () {
     document.getElementById("weightLimit").value = "";
   }
 
-  // Trip Details and Packing List Features
-
-  const tripForm = document.getElementById("tripForm");
-  const tripOutput = document.getElementById("tripOutput");
-  const packItems = document.querySelectorAll(".pack-item");
-  const totalWeightDisplay = document.getElementById("totalWeight");
-  const addCustomItemButton = document.getElementById("addCustomItem");
-  const customItemsList = document.getElementById("customItemsList");
-  const saveFullTripButton = document.getElementById("saveFullTrip");
-  const savedTripsOutput = document.getElementById("savedTripsOutput");
-
-  let currentTrip = {};
-  let customItems = [];
-
-  loadSavedTripDetails();
-  displaySavedTrips();
-  updateTotalWeight();
-
-  // Save trip details
   if (tripForm) {
     tripForm.addEventListener("submit", function (event) {
       event.preventDefault();
@@ -243,49 +234,31 @@ document.addEventListener("DOMContentLoaded", function () {
       };
 
       localStorage.setItem("packsmartCurrentTrip", JSON.stringify(currentTrip));
-
       displayTripDetails(currentTrip);
     });
   }
 
-  // Update total weight when checklist items change
-  packItems.forEach(function (item) {
-    item.addEventListener("change", updateTotalWeight);
-  });
+  function setupPackingItemListeners() {
+    const allItems = document.querySelectorAll(".pack-item, .custom-pack-item");
 
-  // Add custom packing item
+    allItems.forEach(function (item) {
+      item.addEventListener("change", updateTotalWeight);
+    });
+  }
+
   if (addCustomItemButton) {
     addCustomItemButton.addEventListener("click", function () {
       const itemName = document.getElementById("customItemName").value.trim();
       const itemWeight = parseFloat(document.getElementById("customItemWeight").value);
+      const itemCategory = document.getElementById("customItemCategory").value;
+      const itemType = document.getElementById("customItemType").value;
 
-      if (!itemName || isNaN(itemWeight)) {
-        alert("Please enter an item name and weight.");
+      if (!itemName || isNaN(itemWeight) || itemWeight <= 0) {
+        alert("Please enter an item name and a weight greater than 0.");
         return;
       }
 
-      const newItem = {
-        name: itemName,
-        weight: itemWeight
-      };
-
-      customItems.push(newItem);
-
-      const itemDiv = document.createElement("div");
-      itemDiv.className = "custom-item";
-
-      itemDiv.innerHTML = `
-        <label>
-          <input type="checkbox" class="custom-pack-item" data-weight="${itemWeight}" checked>
-          ${itemName} - ${itemWeight} lbs
-        </label>
-      `;
-
-      customItemsList.appendChild(itemDiv);
-
-      itemDiv
-        .querySelector(".custom-pack-item")
-        .addEventListener("change", updateTotalWeight);
+      addCustomItemToPage(itemName, itemWeight, itemCategory, itemType);
 
       document.getElementById("customItemName").value = "";
       document.getElementById("customItemWeight").value = "";
@@ -294,26 +267,122 @@ document.addEventListener("DOMContentLoaded", function () {
     });
   }
 
-  // Calculate total pack weight
+  function addCustomItemToPage(itemName, itemWeight, itemCategory, itemType) {
+    const itemDiv = document.createElement("div");
+    itemDiv.className = "custom-item";
+
+    itemDiv.innerHTML = `
+      <label>
+        <input
+          type="checkbox"
+          class="custom-pack-item"
+          data-name="${itemName}"
+          data-weight="${itemWeight}"
+          data-category="${itemCategory}"
+          data-type="${itemType}"
+          checked
+        >
+        ${itemName} - ${itemWeight} lbs (${itemType}, ${itemCategory})
+      </label>
+    `;
+
+    customItemsList.appendChild(itemDiv);
+    itemDiv.querySelector(".custom-pack-item").addEventListener("change", updateTotalWeight);
+  }
+
+  function getSelectedItems() {
+    const selectedItems = [];
+    const allItems = document.querySelectorAll(".pack-item, .custom-pack-item");
+
+    allItems.forEach(function (item) {
+      if (item.checked) {
+        selectedItems.push({
+          name: item.dataset.name || item.parentElement.textContent.trim(),
+          weight: parseFloat(item.dataset.weight) || 0,
+          category: item.dataset.category || "Other",
+          type: item.dataset.type || "Optional"
+        });
+      }
+    });
+
+    return selectedItems;
+  }
+
   function updateTotalWeight() {
     if (!totalWeightDisplay) {
       return;
     }
 
-    let totalWeight = 0;
+    const selectedItems = getSelectedItems();
 
-    const allItems = document.querySelectorAll(".pack-item, .custom-pack-item");
+    const totalWeight = selectedItems.reduce(function (total, item) {
+      return total + item.weight;
+    }, 0);
 
-    allItems.forEach(function (item) {
-      if (item.checked) {
-        totalWeight += parseFloat(item.dataset.weight);
+    const categoryTotals = {};
+    let requiredTotal = 0;
+    let optionalTotal = 0;
+
+    selectedItems.forEach(function (item) {
+      categoryTotals[item.category] = (categoryTotals[item.category] || 0) + item.weight;
+
+      if (item.type === "Required") {
+        requiredTotal += item.weight;
+      } else {
+        optionalTotal += item.weight;
       }
     });
 
     totalWeightDisplay.textContent = totalWeight.toFixed(1);
+    updateWeightLimitDisplay(totalWeight);
+    updateCategorySummary(categoryTotals, requiredTotal, optionalTotal);
   }
 
-  // Save full trip
+  function updateWeightLimitDisplay(totalWeight) {
+    const backpackLimit = parseFloat(currentBackpack.weightLimit);
+
+    weightStatus.classList.remove("weight-good", "weight-warning", "weight-over");
+
+    if (!backpackLimit || isNaN(backpackLimit)) {
+      backpackLimitDisplay.textContent = "Not saved yet";
+      remainingWeightDisplay.textContent = "Save backpack info first";
+      weightStatus.textContent =
+        "Save backpack information to compare the packing list to the backpack weight limit.";
+      weightStatus.classList.add("weight-warning");
+      return;
+    }
+
+    const remainingWeight = backpackLimit - totalWeight;
+
+    backpackLimitDisplay.textContent = backpackLimit.toFixed(1) + " lbs";
+    remainingWeightDisplay.textContent = remainingWeight.toFixed(1) + " lbs";
+
+    if (remainingWeight < 0) {
+      weightStatus.textContent =
+        "Over the backpack weight limit. Remove some gear or use a larger backpack.";
+      weightStatus.classList.add("weight-over");
+    } else if (remainingWeight <= 5) {
+      weightStatus.textContent = "Close to the weight limit. Optional gear should be reviewed.";
+      weightStatus.classList.add("weight-warning");
+    } else {
+      weightStatus.textContent = "Pack weight is under the backpack weight limit.";
+      weightStatus.classList.add("weight-good");
+    }
+  }
+
+  function updateCategorySummary(categoryTotals, requiredTotal, optionalTotal) {
+    let summary = `
+      <p><strong>Required Gear:</strong> ${requiredTotal.toFixed(1)} lbs</p>
+      <p><strong>Optional Gear:</strong> ${optionalTotal.toFixed(1)} lbs</p>
+    `;
+
+    Object.keys(categoryTotals).forEach(function (category) {
+      summary += `<p><strong>${category}:</strong> ${categoryTotals[category].toFixed(1)} lbs</p>`;
+    });
+
+    categoryWeightOutput.innerHTML = summary;
+  }
+
   if (saveFullTripButton) {
     saveFullTripButton.addEventListener("click", function () {
       const savedTrips = JSON.parse(localStorage.getItem("packsmartSavedTrips")) || [];
@@ -328,33 +397,23 @@ document.addEventListener("DOMContentLoaded", function () {
         return;
       }
 
-      const selectedItems = [];
-      const allItems = document.querySelectorAll(".pack-item, .custom-pack-item");
-
-      allItems.forEach(function (item) {
-        if (item.checked) {
-          selectedItems.push({
-            name: item.parentElement.textContent.trim(),
-            weight: parseFloat(item.dataset.weight)
-          });
-        }
-      });
+      const selectedItems = getSelectedItems();
 
       const fullTrip = {
         tripDetails: currentTrip,
+        backpack: currentBackpack,
         selectedItems: selectedItems,
-        totalWeight: totalWeightDisplay.textContent
+        totalWeight: totalWeightDisplay.textContent,
+        savedDate: new Date().toLocaleDateString()
       };
 
       savedTrips.push(fullTrip);
-
       localStorage.setItem("packsmartSavedTrips", JSON.stringify(savedTrips));
 
       displaySavedTrips();
     });
   }
 
-  // Display trip details
   function displayTripDetails(trip) {
     if (!tripOutput) {
       return;
@@ -370,7 +429,6 @@ document.addEventListener("DOMContentLoaded", function () {
     `;
   }
 
-  // Load saved trip details
   function loadSavedTripDetails() {
     const savedCurrentTrip = localStorage.getItem("packsmartCurrentTrip");
 
@@ -380,7 +438,6 @@ document.addEventListener("DOMContentLoaded", function () {
     }
   }
 
-  // Display saved trips
   function displaySavedTrips() {
     if (!savedTripsOutput) {
       return;
@@ -393,19 +450,157 @@ document.addEventListener("DOMContentLoaded", function () {
       return;
     }
 
-    let savedOutput = "<h3>Saved Trips</h3>";
+    let savedOutput = `<p><strong>${savedTrips.length} of 15 trips saved.</strong></p>`;
 
     savedTrips.forEach(function (trip, index) {
+      const itemPreview = trip.selectedItems
+        .slice(0, 5)
+        .map(function (item) {
+          return `<li>${item.name} - ${item.weight} lbs (${item.type})</li>`;
+        })
+        .join("");
+
+      const moreItemsText =
+        trip.selectedItems.length > 5
+          ? `<p>${trip.selectedItems.length - 5} more item(s) saved.</p>`
+          : "";
+
+      const backpackLimit =
+        trip.backpack && trip.backpack.weightLimit
+          ? trip.backpack.weightLimit + " lbs"
+          : "Not saved";
+
       savedOutput += `
         <div class="saved-trip">
           <p><strong>${index + 1}. ${trip.tripDetails.name}</strong></p>
-          <p>Location: ${trip.tripDetails.location}</p>
-          <p>Days: ${trip.tripDetails.days}</p>
-          <p>Total Pack Weight: ${trip.totalWeight} lbs</p>
+          <p><strong>Saved:</strong> ${trip.savedDate || "Not listed"}</p>
+          <p><strong>Location:</strong> ${trip.tripDetails.location}</p>
+          <p><strong>Days:</strong> ${trip.tripDetails.days}</p>
+          <p><strong>Total Pack Weight:</strong> ${trip.totalWeight} lbs</p>
+          <p><strong>Backpack Limit:</strong> ${backpackLimit}</p>
+          <p><strong>Selected Items:</strong></p>
+          <ul>${itemPreview}</ul>
+          ${moreItemsText}
+          <div class="trip-actions">
+            <button type="button" class="load-trip" data-index="${index}">Load Trip</button>
+            <button type="button" class="delete-trip" data-index="${index}">Delete Trip</button>
+          </div>
         </div>
       `;
     });
 
     savedTripsOutput.innerHTML = savedOutput;
+    setupSavedTripButtons();
+  }
+
+  function setupSavedTripButtons() {
+    const loadButtons = document.querySelectorAll(".load-trip");
+    const deleteButtons = document.querySelectorAll(".delete-trip");
+
+    loadButtons.forEach(function (button) {
+      button.addEventListener("click", function () {
+        const index = parseInt(button.dataset.index);
+        loadSavedTrip(index);
+      });
+    });
+
+    deleteButtons.forEach(function (button) {
+      button.addEventListener("click", function () {
+        const index = parseInt(button.dataset.index);
+        deleteSavedTrip(index);
+      });
+    });
+  }
+
+  function loadSavedTrip(index) {
+    const savedTrips = JSON.parse(localStorage.getItem("packsmartSavedTrips")) || [];
+    const trip = savedTrips[index];
+
+    if (!trip) {
+      return;
+    }
+
+    currentTrip = trip.tripDetails;
+    currentBackpack = trip.backpack || currentBackpack;
+
+    localStorage.setItem("packsmartCurrentTrip", JSON.stringify(currentTrip));
+    localStorage.setItem("packsmartBackpack", JSON.stringify(currentBackpack));
+
+    fillTripForm(currentTrip);
+    fillBackpackForm(currentBackpack);
+    displayTripDetails(currentTrip);
+    displayBackpack(currentBackpack);
+    restoreSelectedItems(trip.selectedItems || []);
+    updateTotalWeight();
+  }
+
+  function fillTripForm(trip) {
+    document.getElementById("tripName").value = trip.name || "";
+    document.getElementById("tripLocation").value = trip.location || "";
+    document.getElementById("tripDays").value = trip.days || "";
+    document.getElementById("tripWeather").value = trip.weather || "";
+    document.getElementById("tripDifficulty").value = trip.difficulty || "";
+  }
+
+  function fillBackpackForm(backpack) {
+    document.getElementById("brand").value = backpack.brand || "";
+    document.getElementById("model").value = backpack.model || "";
+    document.getElementById("capacity").value = backpack.capacity || "";
+    document.getElementById("weightLimit").value = backpack.weightLimit || "";
+  }
+
+  function restoreSelectedItems(savedItems) {
+    customItemsList.innerHTML = "";
+
+    const allDefaultItems = document.querySelectorAll(".pack-item");
+
+    allDefaultItems.forEach(function (item) {
+      item.checked = false;
+    });
+
+    savedItems.forEach(function (savedItem) {
+      let matchedDefaultItem = null;
+
+      allDefaultItems.forEach(function (defaultItem) {
+        if (
+          defaultItem.dataset.name === savedItem.name &&
+          defaultItem.dataset.category === savedItem.category &&
+          defaultItem.dataset.type === savedItem.type
+        ) {
+          matchedDefaultItem = defaultItem;
+        }
+      });
+
+      if (matchedDefaultItem) {
+        matchedDefaultItem.checked = true;
+      } else {
+        addCustomItemToPage(
+          savedItem.name,
+          savedItem.weight,
+          savedItem.category || "Extras",
+          savedItem.type || "Optional"
+        );
+      }
+    });
+  }
+
+  function deleteSavedTrip(index) {
+    const savedTrips = JSON.parse(localStorage.getItem("packsmartSavedTrips")) || [];
+
+    savedTrips.splice(index, 1);
+    localStorage.setItem("packsmartSavedTrips", JSON.stringify(savedTrips));
+
+    displaySavedTrips();
+  }
+
+  if (clearSavedTripsButton) {
+    clearSavedTripsButton.addEventListener("click", function () {
+      const confirmClear = confirm("Clear all saved trips?");
+
+      if (confirmClear) {
+        localStorage.removeItem("packsmartSavedTrips");
+        displaySavedTrips();
+      }
+    });
   }
 });
