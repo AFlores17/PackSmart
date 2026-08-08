@@ -24,7 +24,6 @@
       </p>
 
       <form id="backpackForm">
-
         <label for="backpackSelect">Choose from Starter Backpack List</label>
         <select id="backpackSelect">
           <option value="">-- Select a backpack or enter your own --</option>
@@ -130,35 +129,53 @@
 
     <section class="card">
       <h2>Packing List</h2>
-      <p class="section-note">Select items for the trip and enter item weights to track backpack load.</p>
+      <p class="section-note">
+        Required gear is listed first. Optional gear can be added if there is still room in the backpack.
+      </p>
 
-      <div class="packing-grid">
-        <div class="packing-category">
-          <h3>Shelter</h3>
-          <label><input type="checkbox" class="pack-item" data-weight="4"> Tent - 4 lbs</label>
-          <label><input type="checkbox" class="pack-item" data-weight="1.5"> Sleeping Pad - 1.5 lbs</label>
-          <label><input type="checkbox" class="pack-item" data-weight="3"> Sleeping Bag - 3 lbs</label>
+      <div class="gear-group required-group">
+        <h3>Required Gear</h3>
+
+        <div class="packing-grid">
+          <div class="packing-category">
+            <h4>Shelter</h4>
+            <label><input type="checkbox" class="pack-item" data-name="Tent" data-weight="4" data-category="Shelter" data-type="Required"> Tent - 4 lbs</label>
+            <label><input type="checkbox" class="pack-item" data-name="Sleeping Pad" data-weight="1.5" data-category="Shelter" data-type="Required"> Sleeping Pad - 1.5 lbs</label>
+            <label><input type="checkbox" class="pack-item" data-name="Sleeping Bag" data-weight="3" data-category="Shelter" data-type="Required"> Sleeping Bag - 3 lbs</label>
+          </div>
+
+          <div class="packing-category">
+            <h4>Food and Water</h4>
+            <label><input type="checkbox" class="pack-item" data-name="Food" data-weight="2" data-category="Food and Water" data-type="Required"> Food - 2 lbs</label>
+            <label><input type="checkbox" class="pack-item" data-name="Water Bottle" data-weight="2" data-category="Food and Water" data-type="Required"> Water Bottle - 2 lbs</label>
+          </div>
+
+          <div class="packing-category">
+            <h4>Safety</h4>
+            <label><input type="checkbox" class="pack-item" data-name="First Aid Kit" data-weight="0.5" data-category="Safety" data-type="Required"> First Aid Kit - 0.5 lbs</label>
+            <label><input type="checkbox" class="pack-item" data-name="Flashlight" data-weight="0.3" data-category="Safety" data-type="Required"> Flashlight - 0.3 lbs</label>
+            <label><input type="checkbox" class="pack-item" data-name="Map / Compass" data-weight="0.2" data-category="Safety" data-type="Required"> Map / Compass - 0.2 lbs</label>
+          </div>
         </div>
+      </div>
 
-        <div class="packing-category">
-          <h3>Clothing</h3>
-          <label><input type="checkbox" class="pack-item" data-weight="1"> Jacket - 1 lb</label>
-          <label><input type="checkbox" class="pack-item" data-weight="0.5"> Extra Socks - 0.5 lbs</label>
-          <label><input type="checkbox" class="pack-item" data-weight="1"> Extra Shirt - 1 lb</label>
-        </div>
+      <div class="gear-group optional-group">
+        <h3>Optional Gear</h3>
 
-        <div class="packing-category">
-          <h3>Food and Water</h3>
-          <label><input type="checkbox" class="pack-item" data-weight="2"> Food - 2 lbs</label>
-          <label><input type="checkbox" class="pack-item" data-weight="2"> Water Bottle - 2 lbs</label>
-          <label><input type="checkbox" class="pack-item" data-weight="1"> Cooking Kit - 1 lb</label>
-        </div>
+        <div class="packing-grid">
+          <div class="packing-category">
+            <h4>Clothing</h4>
+            <label><input type="checkbox" class="pack-item" data-name="Jacket" data-weight="1" data-category="Clothing" data-type="Optional"> Jacket - 1 lb</label>
+            <label><input type="checkbox" class="pack-item" data-name="Extra Socks" data-weight="0.5" data-category="Clothing" data-type="Optional"> Extra Socks - 0.5 lbs</label>
+            <label><input type="checkbox" class="pack-item" data-name="Extra Shirt" data-weight="1" data-category="Clothing" data-type="Optional"> Extra Shirt - 1 lb</label>
+          </div>
 
-        <div class="packing-category">
-          <h3>Safety</h3>
-          <label><input type="checkbox" class="pack-item" data-weight="0.5"> First Aid Kit - 0.5 lbs</label>
-          <label><input type="checkbox" class="pack-item" data-weight="0.3"> Flashlight - 0.3 lbs</label>
-          <label><input type="checkbox" class="pack-item" data-weight="0.2"> Map / Compass - 0.2 lbs</label>
+          <div class="packing-category">
+            <h4>Extras</h4>
+            <label><input type="checkbox" class="pack-item" data-name="Cooking Kit" data-weight="1" data-category="Extras" data-type="Optional"> Cooking Kit - 1 lb</label>
+            <label><input type="checkbox" class="pack-item" data-name="Camera" data-weight="1.2" data-category="Extras" data-type="Optional"> Camera - 1.2 lbs</label>
+            <label><input type="checkbox" class="pack-item" data-name="Camp Chair" data-weight="2" data-category="Extras" data-type="Optional"> Camp Chair - 2 lbs</label>
+          </div>
         </div>
       </div>
 
@@ -166,10 +183,25 @@
         <h3>Add Custom Item</h3>
 
         <label for="customItemName">Item Name</label>
-        <input type="text" id="customItemName" placeholder="Example: Camera" />
+        <input type="text" id="customItemName" placeholder="Example: Rain Jacket" />
 
         <label for="customItemWeight">Item Weight in lbs</label>
         <input type="number" id="customItemWeight" min="0" step="0.1" placeholder="Example: 1.2" />
+
+        <label for="customItemCategory">Item Category</label>
+        <select id="customItemCategory">
+          <option value="Shelter">Shelter</option>
+          <option value="Clothing">Clothing</option>
+          <option value="Food and Water">Food and Water</option>
+          <option value="Safety">Safety</option>
+          <option value="Extras">Extras</option>
+        </select>
+
+        <label for="customItemType">Required or Optional</label>
+        <select id="customItemType">
+          <option value="Required">Required</option>
+          <option value="Optional">Optional</option>
+        </select>
 
         <button type="button" id="addCustomItem">Add Item</button>
       </div>
@@ -178,7 +210,16 @@
 
       <div class="weight-summary">
         <h3>Total Pack Weight: <span id="totalWeight">0</span> lbs</h3>
+        <p>Backpack Weight Limit: <span id="backpackLimitDisplay">Not saved yet</span></p>
+        <p>Remaining Weight: <span id="remainingWeight">Save backpack info first</span></p>
+        <p id="weightStatus" class="weight-status">Select items to check the total weight.</p>
+        <div id="categoryWeightOutput" class="category-summary"></div>
         <button type="button" id="saveFullTrip">Save Full Trip</button>
+      </div>
+
+      <div class="saved-trips-header">
+        <h3>Saved Trip History</h3>
+        <button type="button" id="clearSavedTrips" class="small-button">Clear Saved Trips</button>
       </div>
 
       <div id="savedTripsOutput" class="output-box"></div>
