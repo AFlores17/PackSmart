@@ -137,6 +137,11 @@ button:hover {
   margin-top: 12px;
 }
 
+.saved-trip ul {
+  margin-top: 8px;
+  padding-left: 22px;
+}
+
 .status-message {
   margin-top: 15px;
   padding: 12px;
@@ -168,6 +173,29 @@ button:hover {
   border-radius: 6px;
 }
 
+.gear-group {
+  margin-top: 20px;
+}
+
+.gear-group h3 {
+  color: #12351f;
+  margin-bottom: 12px;
+}
+
+.required-group {
+  padding: 15px;
+  background-color: #edf4e7;
+  border: 1px solid #b6c9a8;
+  border-radius: 10px;
+}
+
+.optional-group {
+  padding: 15px;
+  background-color: #fffaf0;
+  border: 1px solid #d8c690;
+  border-radius: 10px;
+}
+
 .packing-grid {
   display: grid;
   grid-template-columns: repeat(2, 1fr);
@@ -175,14 +203,15 @@ button:hover {
 }
 
 .packing-category {
-  background-color: #fffaf0;
+  background-color: #ffffff;
   border: 1px solid #d8c690;
   border-radius: 8px;
   padding: 15px;
 }
 
-.packing-category h3 {
+.packing-category h4 {
   margin-top: 0;
+  margin-bottom: 10px;
   color: #17451f;
 }
 
@@ -197,6 +226,9 @@ button:hover {
   background-color: #fffaf0;
   border: 1px solid #d8c690;
   border-radius: 8px;
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
 }
 
 .custom-item {
@@ -214,6 +246,71 @@ button:hover {
   text-align: center;
 }
 
+.weight-status {
+  padding: 10px;
+  border-radius: 8px;
+  font-weight: bold;
+}
+
+.weight-good {
+  background-color: #e4eddc;
+  color: #12351f;
+}
+
+.weight-warning {
+  background-color: #fff3cd;
+  color: #6b4b00;
+}
+
+.weight-over {
+  background-color: #f8d7da;
+  color: #7a1c1c;
+}
+
+.category-summary {
+  margin-top: 12px;
+  text-align: left;
+  background-color: #ffffff;
+  border: 1px solid #d8c690;
+  border-radius: 8px;
+  padding: 10px;
+}
+
+.category-summary p {
+  margin: 6px 0;
+}
+
+.saved-trips-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 15px;
+  margin-top: 25px;
+}
+
+.saved-trips-header h3 {
+  margin: 0;
+  color: #12351f;
+}
+
+.small-button {
+  margin-top: 0;
+  padding: 10px 12px;
+  font-size: 14px;
+}
+
+.trip-actions {
+  display: flex;
+  gap: 10px;
+  flex-wrap: wrap;
+}
+
+.trip-actions button {
+  margin-top: 5px;
+  padding: 9px 12px;
+  font-size: 14px;
+}
+
 @media (max-width: 700px) {
   .app-container {
     margin: 20px auto;
@@ -226,5 +323,10 @@ button:hover {
 
   .packing-grid {
     grid-template-columns: 1fr;
+  }
+
+  .saved-trips-header {
+    align-items: stretch;
+    flex-direction: column;
   }
 }
